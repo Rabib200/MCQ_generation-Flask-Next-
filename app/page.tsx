@@ -1,72 +1,28 @@
 "use client";
 import { useState } from "react";
 
-// const YourPage = () => {
-//   const [word, setWord] = useState("");
-//   const [distractors, setDistractors] = useState([]);
-//   const [error, setError] = useState("");
-
-//   const handleGetDistractors = async () => {
-//     try {
-//       const serverUrl = "http://127.0.0.1:5000";
-//       const response = await fetch(
-//         `${serverUrl}/api/get_distractors?word=${word}`,
-//         {
-//           method: "GET",
-//         }
-//       );
-
-//       if (!response.ok) {
-//         throw new Error("Failed to fetch distractors");
-//       }
-//       const respClone = response.clone();
-//       console.log(respClone.headers);
-//       const data = await response.json();
-//       setDistractors(data.distractors);
-//       setError("");
-//     } catch (error: any) {
-//       setError(error.message);
-//       setDistractors([]);
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <input
-//         type="text"
-//         value={word}
-//         onChange={(e) => setWord(e.target.value)}
-//         placeholder=""
-//       />
-//       <button onClick={handleGetDistractors}>Get Distractors</button>
-
-//       {error && <p>Error: {error}</p>}
-
-//       {distractors.length > 0 && (
-//         <div>
-//           <h3>Distractors:</h3>
-//           <ul>
-//             {distractors.map((distractor, index) => (
-//               <li key={index}>{distractor}</li>
-//             ))}
-//           </ul>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default YourPage;
-
 export default function Mcq() {
   const [paragraph, setParagraph] = useState("");
+  const [selectedWords, setSelectedWords] = useState([]);
+  const [enableHighlight, setEnableHighlight] = useState(false);
 
   const [mcqDataList, setMcqDataList] = useState([]);
 
+  const handleWordSelection = (word: string) => {
+    if (enableHighlight && !selectedWords.includes(word)) {
+      setSelectedWords([...selectedWords, word]);
+    }
+  };
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const sentenceWithMarks = paragraph
+    const sentenceWithoutMarks = paragraph
+      .split(/\s+/)
+      .map((word) => (selectedWords.includes(word) ? `**${word}**` : word))
+      .join(" ");
+
+    console.log(sentenceWithoutMarks);
+    const sentenceWithMarks = sentenceWithoutMarks
       .split(".")
       .filter((sentence) => sentence.includes("**"));
 
@@ -100,15 +56,42 @@ export default function Mcq() {
     <div className="flex-col justify-center gap-10">
       <form onSubmit={handleSubmit}>
         <label className="gap-10">
-          Paragraph:
           <textarea
+            name=""
+            id=""
+            cols={30}
+            rows={10}
             value={paragraph}
             onChange={(e) => setParagraph(e.target.value)}
-            className="text-black"
+            className="bg-gray-100 
+            h-[400px] 
+            w-[90%] 
+            p-5 
+            border-0
+            text-black
+            rounded-b-lg"
+            onSelect={(event) => {
+              const selectedText = event.target.value.substring(
+                event.target.selectionStart,
+                event.target.selectionEnd
+              );
+              handleWordSelection(selectedText);
+            }}
           />
         </label>
         <br />
+        <div>Selected Words: {selectedWords.join(", ")}</div>
 
+        <div className="flex text-center justify-end mr-28">
+          <button
+            className="bg-gray-300 h-[40px] px-5 flex items-center"
+            onClick={() => {
+              setEnableHighlight(!enableHighlight);
+            }}
+          >
+            {enableHighlight ? "Disable Highlight" : "Enable Highlight"}
+          </button>
+        </div>
         <button type="submit">Generate MCQ</button>
       </form>
 

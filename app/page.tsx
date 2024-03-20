@@ -16,12 +16,20 @@ export default function Mcq() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    const sentenceWithoutMarks = paragraph
-      .split(/\s+/)
-      .map((word) => (selectedWords.includes(word) ? `**${word}**` : word))
-      .join(" ");
+    // const sentenceWithoutMarks = paragraph
+    //   .split(/\s+/)
+    //   .map((word) => (selectedWords.includes(word) ? `**${word}**` : word))
+    //   .join(" ");
+    let sentenceWithoutMarks = paragraph;
+    selectedWords.forEach((phrase) => {
+      const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedPhrase, "g");
+      sentenceWithoutMarks = sentenceWithoutMarks.replace(
+        regex,
+        `**${phrase}**`
+      );
+    });
 
-    console.log(sentenceWithoutMarks);
     const sentenceWithMarks = sentenceWithoutMarks
       .split(".")
       .filter((sentence) => sentence.includes("**"));
@@ -90,9 +98,9 @@ export default function Mcq() {
             }}
           >
             {enableHighlight ? "Disable Highlight" : "Enable Highlight"}
-          </button>
+          </button>{" "}
+          <button type="submit">Generate MCQ</button>
         </div>
-        <button type="submit">Generate MCQ</button>
       </form>
 
       {mcqDataList.length > 0 && (

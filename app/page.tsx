@@ -16,10 +16,6 @@ export default function Mcq() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
-    // const sentenceWithoutMarks = paragraph
-    //   .split(/\s+/)
-    //   .map((word) => (selectedWords.includes(word) ? `**${word}**` : word))
-    //   .join(" ");
     let sentenceWithoutMarks = paragraph;
     selectedWords.forEach((phrase) => {
       const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -92,6 +88,7 @@ export default function Mcq() {
 
         <div className="flex text-center justify-end mr-28">
           <button
+            type="button"
             className="bg-gray-300 h-[40px] px-5 flex items-center"
             onClick={() => {
               setEnableHighlight(!enableHighlight);

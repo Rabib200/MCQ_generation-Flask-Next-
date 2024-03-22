@@ -1,11 +1,12 @@
 "use client";
 import { useState } from "react";
+import MCQ from "../components/MCQ";
 
 export default function Mcq() {
   const [paragraph, setParagraph] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
   const [enableHighlight, setEnableHighlight] = useState(false);
-
+  let index = 0;
   const [mcqDataList, setMcqDataList] = useState([]);
 
   const handleWordSelection = (word: string) => {
@@ -57,23 +58,26 @@ export default function Mcq() {
   };
 
   return (
-    <div className="flex-col justify-center gap-10">
+    <div className="flex-col justify-center gap-10 bg-gray">
       <form onSubmit={handleSubmit}>
         <label className="gap-10">
           <textarea
             name=""
             id=""
-            cols={30}
-            rows={10}
             value={paragraph}
             onChange={(e) => setParagraph(e.target.value)}
-            className="bg-gray-100 
-            h-[400px] 
-            w-[90%] 
-            p-5 
-            border-0
-            text-black
-            rounded-b-lg"
+            style={{
+              width: "90%",
+              height: "400px",
+              padding: "10px",
+              border: "1px solid #ccc",
+              borderRadius: "5px",
+              resize: "none",
+              fontFamily: "Arial, sans-serif",
+              fontSize: "16px",
+              color: "#000",
+              backgroundColor: "#fff",
+            }}
             onSelect={(event) => {
               const selectedText = event.target.value.substring(
                 event.target.selectionStart,
@@ -84,9 +88,9 @@ export default function Mcq() {
           />
         </label>
         <br />
-        <div>Selected Words: {selectedWords.join(", ")}</div>
+        <div>Selected Highlights: {selectedWords.join(", ")}</div>
 
-        <div className="flex text-center justify-end mr-28">
+        <div className="flex justify-center text-center  ">
           <button
             type="button"
             className="bg-gray-300 h-[40px] px-5 flex items-center"
@@ -104,13 +108,21 @@ export default function Mcq() {
         <div className="flex-col justify-center gap-10">
           <h3>Generated MCQ Data:</h3>
           {mcqDataList.map((mcqData) => (
-            <div>
-              {" "}
-              <p>Question: {mcqData.question}</p>
-              <p>Answer: {mcqData.answer}</p>
-              <p>Meaning: {mcqData.meaning}</p>
-              <p>Distractors: {mcqData.distractors.join(", ")}</p>
-            </div>
+            // <div>
+            //   {" "}
+            //   <p>Question: {mcqData.question}</p>
+            //   <p>Answer: {mcqData.answer}</p>
+            //   <p>Meaning: {mcqData.meaning}</p>
+            //   <p>Distractors: {mcqData.distractors.join(", ")}</p>
+
+            // </div>
+            <MCQ
+              key={index}
+              index={index}
+              question={mcqData.question}
+              options={mcqData.distractors}
+              answer={mcqData.answer}
+            />
           ))}
         </div>
       )}

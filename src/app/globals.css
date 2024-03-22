@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.poppins {
+  font-family: Poppins, sans-serif;
+}
+
+.volkhov {
+  font-family: Volkhov;
+}
+.IBM {
+  font-family: IBM Plex sans;
+}
+
+.red-gradient {
+  /* background: linear-gradient(180deg, #fe946d 0%, #ff7d68 100%); */
+  background: whitesmoke;
+}

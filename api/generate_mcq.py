@@ -31,7 +31,8 @@ def get_question(sentence,answer):
   dec = [question_tokenizer.decode(ids) for ids in outs]
 
 
-  Question = dec[0].replace("question:","")
+  Question = dec[0].replace("question:","").replace("<pad>","").replace("</s>","")
+  
   Question= Question.strip()
   return Question
 

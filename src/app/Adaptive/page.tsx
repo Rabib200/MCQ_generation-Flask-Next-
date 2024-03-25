@@ -14,6 +14,12 @@ export default function Mcq() {
       setSelectedWords([...selectedWords, word]);
     }
   };
+  const handleDeleteWordSelection = () => {
+    const updatedSelectedWords = [...selectedWords];
+    updatedSelectedWords.pop();
+    setSelectedWords(updatedSelectedWords);
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -57,8 +63,14 @@ export default function Mcq() {
     }
   };
 
+  const deleteQuestion = (index: number) => {
+    const updatedMcqDataList = [...mcqDataList];
+    updatedMcqDataList.splice(index, 1);
+    setMcqDataList(updatedMcqDataList);
+  };
+
   return (
-    <div className="flex-col justify-center gap-10 bg-gray">
+    <div className="flex-col  gap-10 bg-gray">
       <form onSubmit={handleSubmit}>
         <label className="gap-10">
           <textarea
@@ -77,6 +89,7 @@ export default function Mcq() {
               fontSize: "16px",
               color: "#000",
               backgroundColor: "#fff",
+              justifyContent: "center",
             }}
             onSelect={(event) => {
               const selectedText = event.target.value.substring(
@@ -101,13 +114,16 @@ export default function Mcq() {
             {enableHighlight ? "Disable Highlight" : "Enable Highlight"}
           </button>{" "}
           <button type="submit">Generate MCQ</button>
+          <button type="button" onClick={handleDeleteWordSelection}>
+            Delete Latest Highlight
+          </button>
         </div>
       </form>
 
       {mcqDataList.length > 0 && (
         <div className="flex-col justify-center gap-10">
           <h3>Generated MCQ Data:</h3>
-          {mcqDataList.map((mcqData) => (
+          {mcqDataList.map((mcqData, index) => (
             // <div>
             //   {" "}
             //   <p>Question: {mcqData.question}</p>
@@ -122,6 +138,7 @@ export default function Mcq() {
               question={mcqData.question}
               options={mcqData.distractors}
               answer={mcqData.answer}
+              onDelete={() => deleteQuestion(index)}
             />
           ))}
         </div>

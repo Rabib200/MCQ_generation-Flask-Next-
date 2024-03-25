@@ -45,7 +45,7 @@ def getMCQs(sent):
   if sense is not None:
     distractors = get_distractors_of_a_word(sense,answer)
   else:
-    distractors = ["Word not found in Wordnet. So unable to extract distractors."]
+    distractors = [""]
   
   sentence_for_T5 = sent.replace("**"," ")
   sentence_for_T5 = " ".join([sentence_for_T5, answer])

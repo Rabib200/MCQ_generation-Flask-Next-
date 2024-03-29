@@ -63,6 +63,13 @@ export default function Mcq() {
     }
   };
 
+  const selectOption = (index: number, selectedOption: string) => {
+    console.log(selectedOption);
+  };
+  const savedOptions = (additionalOptions: string[] | null) => {
+    console.log(additionalOptions);
+  };
+
   const deleteQuestion = (index: number) => {
     const updatedMcqDataList = [...mcqDataList];
     updatedMcqDataList.splice(index, 1);
@@ -124,17 +131,10 @@ export default function Mcq() {
         <div className="flex-col justify-center gap-10">
           <h3>Generated MCQ Data:</h3>
           {mcqDataList.map((mcqData, index) => (
-            // <div>
-            //   {" "}
-            //   <p>Question: {mcqData.question}</p>
-            //   <p>Answer: {mcqData.answer}</p>
-            //   <p>Meaning: {mcqData.meaning}</p>
-            //   <p>Distractors: {mcqData.distractors.join(", ")}</p>
-
-            // </div>
             <MCQ
               key={index}
               index={index}
+              paragraph={paragraph}
               question={mcqData.question}
               options={mcqData.distractors}
               answer={mcqData.answer}
@@ -143,6 +143,7 @@ export default function Mcq() {
           ))}
         </div>
       )}
+      <div className="flex justify-center">Confirm</div>
     </div>
   );
 }

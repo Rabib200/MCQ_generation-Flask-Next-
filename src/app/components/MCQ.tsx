@@ -1,15 +1,24 @@
+import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import AddOptionModal from "./AddOptionModal";
 
 interface MCQProps {
   index: number;
+  paragraph: string;
   question: string;
   options: string[];
   answer: string;
   onDelete: (index: number) => void;
 }
 
-function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
+function MCQ({
+  index,
+  paragraph,
+  question,
+  options,
+  answer,
+  onDelete,
+}: MCQProps) {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [shuffledOptions, setShuffledOptions] = useState<string[]>([]);
   const [additionalOptions, setAdditionalOptions] = useState<string[]>([]);
@@ -26,11 +35,25 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
     setIsModalOpen(false);
   };
 
-  const addOption = (newOption) => {
+  const addOption = async (newOption: string) => {
     if (newOption.trim() !== "") {
-      setAdditionalOptions([...additionalOptions, newOption]);
+      try {
+        const response = await axios.post("/api/node/MCQ", {
+          paragraph: paragraph,
+          index: index,
+          question: question,
+          answer: answer,
+          options: shuffledOptions,
+        });
+        const updatedOptions = [...additionalOptions, newOption];
+        setAdditionalOptions(updatedOptions);
+        closeModal();
+      } catch (error) {
+        console.error("Error adding option:", error);
+      }
+    } else {
+      console.log("No questions available");
     }
-    closeModal();
   };
 
   const deleteOption = (index: number) => {
@@ -44,10 +67,8 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
     // console.log(question);
   };
 
-  console.log(question);
-
   useEffect(() => {
-    const mergedOptions = [...options, answer];
+    const mergedOptions = [...additionalOptions, answer];
     const shuffled = mergedOptions.sort(() => Math.random() - 0.5);
     const correctIndex = shuffled.indexOf(answer);
     if (correctIndex !== -1 && correctIndex >= 4) {
@@ -57,7 +78,7 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
       shuffled[correctIndex] = temp;
     }
     setShuffledOptions(shuffled);
-  }, [options, answer]);
+  }, [additionalOptions, answer]);
 
   return (
     <div>
@@ -136,7 +157,7 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
             ))}
           </form>
         </div>
-        {/* Add Option Modal */}
+
         {isModalOpen && (
           <AddOptionModal
             isOpen={isModalOpen}
@@ -145,7 +166,7 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
             suggestedOptions={options}
           />
         )}
-        {/* Add Option Button */}
+
         <button
           onClick={openModal}
           className="mt-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -165,6 +186,10 @@ function MCQ({ index, question, options, answer, onDelete }: MCQProps) {
           Delete Question
         </button>
         <p>Selected option: {selectedOption}</p>
+        <p>
+          Added option serial to be saved in DATABASE:{" "}
+          {shuffledOptions.join(", ")}
+        </p>
       </div>
     </div>
   );

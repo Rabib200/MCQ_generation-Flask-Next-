@@ -2,9 +2,11 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { McqOptions } from "./options.entity";
 
 @Entity()
 export class MCQEntity {
@@ -27,10 +29,8 @@ export class MCQEntity {
   })
   answer: string;
 
-  @Column({
-    type: "jsonb",
-  })
-  options: string[];
+  @OneToMany(() => McqOptions, (options) => options.question)
+  options: McqOptions[];
 
   @CreateDateColumn()
   created_at: Date;

@@ -1,40 +1,19 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from "typeorm";
-import { McqOptions } from "./options.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
+@Entity({ name: "mcq_entity" })
 export class MCQEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  email: string;
+  @Column({ nullable: true })
+  email: string | null;
 
-  @Column()
-  index: number;
+  @Column({ nullable: true })
+  question: string | null;
 
-  @Column({
-    type: "text",
-  })
-  question: string;
+  @Column({ nullable: true })
+  answer: string | null;
 
-  @Column({
-    type: "text",
-  })
-  answer: string;
-
-  @OneToMany(() => McqOptions, (options) => options.question)
-  options: McqOptions[];
-
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @Column({ name: "ques_id", nullable: true })
+  ques_id: number | null;
 }

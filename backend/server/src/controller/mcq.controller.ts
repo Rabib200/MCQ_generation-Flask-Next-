@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import { Repository } from "typeorm";
-import { MCQEntity } from "../entity/MCQ.entity";
 import { AppDataSource } from "../database";
+import { MCQEntity } from "../entity/MCQ.entity";
 
 class MCQController {
   async getMCQs(req: Request, res: Response) {
@@ -18,7 +17,7 @@ class MCQController {
       const id = req.params.id;
       const mcq = await AppDataSource.getRepository(MCQEntity).findOne({
         where: {
-          id: +id,
+          ques_id: +id,
         },
       });
 
@@ -39,7 +38,7 @@ class MCQController {
     }
   }
 
-  updateMCQ(req: Request, res: Response) {}
+  // updateMCQ(req: Request, res: Response) {}
 
   async deleteMCQ(req: Request, res: Response) {
     try {

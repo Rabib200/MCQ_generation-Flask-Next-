@@ -52,7 +52,7 @@ extract_directory = wsd_model_folder
 
 # Generate the path for the extracted folder based on the ZIP file's name
 model_dir =  os.path.join(extract_directory, os.path.splitext(model_filename)[0])
-
+print("model loaded from dir: ", model_dir)
 model = BertWSD.from_pretrained(model_dir)
 tokenizer = BertTokenizer.from_pretrained(model_dir)
 

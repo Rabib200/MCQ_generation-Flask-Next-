@@ -1,34 +1,15 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
-import { MCQEntity } from "./MCQ.entity";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity()
-export class McqOptions {
-  @PrimaryGeneratedColumn()
+@Entity({ name: "options_entity" })
+export class OptionsEntity {
+  @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column()
-  option: string;
+  @Column({ type: "jsonb", nullable: true })
+  options: any;
 
-  @Column()
-  isCorrect: boolean;
-
-  @Column()
-  questionId: number;
-
-  @ManyToOne(() => MCQEntity, (mcq) => mcq.options)
-  @JoinColumn({ name: "questionId" })
-  question: MCQEntity;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @CreateDateColumn()
-  updatedAt: Date;
+  // @ManyToOne(() => MCQEntity, (mcq) => mcq.ques_id)
+  // ques_id: MCQEntity;
+  @Column({ type: "bigint", nullable: true })
+  ques_id: number;
 }

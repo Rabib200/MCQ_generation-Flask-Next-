@@ -1,10 +1,11 @@
-import dotnev from "dotenv";
-dotnev.config();
-import express from "express";
-import mcqRouter from "./routes/mcq.route";
-import { AppDataSource } from "./database";
 import cors from "cors";
+import dotnev from "dotenv";
+import express from "express";
 import morganBody from "morgan-body";
+import { AppDataSource } from "./database";
+import mcqRouter from "./routes/mcq.route";
+import optionsRouter from "./routes/options.route";
+dotnev.config();
 
 async function bootstrap() {
   const app = express();
@@ -30,6 +31,7 @@ async function bootstrap() {
   }
 
   app.use("/api/mcq", mcqRouter);
+  app.use("/api/options", optionsRouter);
 
   app.listen(process.env.PORT, () => {
     console.log(`Server is running on http://localhost:${process.env.PORT}`);

@@ -4,6 +4,7 @@ import AddOptionModal from "./AddOptionModal";
 
 interface MCQProps {
   index: number;
+  ques_id: number;
   paragraph: string;
   question: string;
   options: string[];
@@ -13,6 +14,7 @@ interface MCQProps {
 
 function MCQ({
   index,
+  ques_id,
   paragraph,
   question,
   options,
@@ -36,18 +38,17 @@ function MCQ({
   };
 
   const addOption = async (newOption: string) => {
+    const updatedOptions = [...additionalOptions, newOption];
+    setAdditionalOptions(updatedOptions);
+    console.log(ques_id);
+
+    closeModal();
     if (newOption.trim() !== "") {
       try {
-        const response = await axios.post("/api/node/MCQ", {
-          paragraph: paragraph,
-          index: index,
-          question: question,
-          answer: answer,
-          options: shuffledOptions,
+        const response = await axios.post("http://localhost:3001/api/options", {
+          options: additionalOptions,
+          ques_id: ques_id,
         });
-        const updatedOptions = [...additionalOptions, newOption];
-        setAdditionalOptions(updatedOptions);
-        closeModal();
       } catch (error) {
         console.error("Error adding option:", error);
       }

@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import { useState } from "react";
 import MCQ from "../components/MCQ";
 
@@ -6,8 +7,19 @@ export default function Mcq() {
   const [paragraph, setParagraph] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
   const [enableHighlight, setEnableHighlight] = useState(false);
-  let index = 0;
+  const [randomID, setRandomID] = useState("");
   const [mcqDataList, setMcqDataList] = useState([]);
+
+  let generatedIds = new Set();
+  function generateUniqueId() {
+    let randomId;
+    do {
+      randomId = Math.floor(Math.random() * 9999) + 1;
+    } while (generatedIds.has(randomId));
+
+    generatedIds.add(randomId);
+    return randomId;
+  }
 
   const handleWordSelection = (word: string) => {
     if (enableHighlight && !selectedWords.includes(word)) {
@@ -39,6 +51,8 @@ export default function Mcq() {
 
     try {
       const newMcqDataList = [];
+      let random_ID = generateUniqueId();
+      setRandomID(randomID);
       for (const sentence of sentenceWithMarks) {
         const serverUrl = "http://127.0.0.1:5000";
         const response = await fetch(`${serverUrl}/api/generate_mcq`, {
@@ -55,6 +69,17 @@ export default function Mcq() {
 
         const data = await response.json();
         newMcqDataList.push(data);
+
+        try {
+          const response = await axios.post("http://localhost:3001/api/mcq", {
+            email: "rabibhaque200@gmail.com",
+            ques_id: random_ID,
+            question: data.question,
+            answer: data.answer,
+          });
+        } catch (error) {
+          console.error("Error adding Question:", error);
+        }
       }
 
       setMcqDataList(newMcqDataList);
@@ -134,6 +159,7 @@ export default function Mcq() {
             <MCQ
               key={index}
               index={index}
+              ques_id={parseInt(randomID)}
               paragraph={paragraph}
               question={mcqData.question}
               options={mcqData.distractors}

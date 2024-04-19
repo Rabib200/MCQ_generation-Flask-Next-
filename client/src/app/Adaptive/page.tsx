@@ -7,19 +7,19 @@ export default function Mcq() {
   const [paragraph, setParagraph] = useState("");
   const [selectedWords, setSelectedWords] = useState([]);
   const [enableHighlight, setEnableHighlight] = useState(false);
-  const [randomID, setRandomID] = useState("");
+  const [randomIDs, setRandomIDs] = useState<number[]>([]);
   const [mcqDataList, setMcqDataList] = useState([]);
 
-  let generatedIds = new Set();
-  function generateUniqueId() {
-    let randomId;
-    do {
-      randomId = Math.floor(Math.random() * 9999) + 1;
-    } while (generatedIds.has(randomId));
+  // let generatedIds = new Set();
+  // function generateUniqueId() {
+  //   let randomId;
+  //   do {
+  //     randomId = Math.floor(Math.random() * 9999) + 1;
+  //   } while (generatedIds.has(randomId));
 
-    generatedIds.add(randomId);
-    return randomId;
-  }
+  //   generatedIds.add(randomId);
+  //   return randomId;
+  // }
 
   const handleWordSelection = (word: string) => {
     if (enableHighlight && !selectedWords.includes(word)) {
@@ -33,72 +33,97 @@ export default function Mcq() {
   };
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    let sentenceWithoutMarks = paragraph;
-    selectedWords.forEach((phrase) => {
-      const escapedPhrase = phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const regex = new RegExp(escapedPhrase, "g");
-      sentenceWithoutMarks = sentenceWithoutMarks.replace(
-        regex,
-        `**${phrase}**`
-      );
-    });
-
-    const sentenceWithMarks = sentenceWithoutMarks
-      .split(".")
-      .filter((sentence) => sentence.includes("**"));
-
     try {
-      const newMcqDataList = [];
-      let random_ID = generateUniqueId();
-      setRandomID(randomID);
-      for (const sentence of sentenceWithMarks) {
+      e.preventDefault();
+
+      let sentenceWithoutMarks = paragraph;
+      selectedWords.forEach((phrase) => {
+        const escapedPhrase = phrase?.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escapedPhrase, "g");
+        sentenceWithoutMarks = sentenceWithoutMarks.replace(
+          regex,
+          `**${phrase}**`
+        );
+      });
+
+      const sentenceWithMarks = sentenceWithoutMarks
+        .split(".")
+        .filter((sentence) => sentence.includes("**"));
+
+      // sentenceWithMarks.forEach((element) => {
+      //   const ids = randomIDs;
+      //   ids.push(generateUniqueId());
+      //   setRandomIDs(ids);
+      // });
+
+      const mcqRequests = sentenceWithMarks.map(async (sentence, i) => {
         const serverUrl = "http://127.0.0.1:5000";
-        const response = await fetch(`${serverUrl}/api/generate_mcq`, {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-          },
-          body: JSON.stringify({ sentence }),
+        const mcqResponse = await axios.post(`${serverUrl}/api/generate_mcq`, {
+          sentence,
         });
 
-        if (!response.ok) {
+        if (mcqResponse.status !== 200) {
           throw new Error("Failed to generate MCQ");
         }
 
-        const data = await response.json();
-        newMcqDataList.push(data);
+        const data = mcqResponse.data;
+
+        // const random_ID = randomIDs[i];
 
         try {
-          const response = await axios.post("http://localhost:3001/api/mcq", {
+          await axios.post("http://localhost:3001/api/mcq", {
             email: "rabibhaque200@gmail.com",
-            ques_id: random_ID,
+            ques_id: data.random_id,
             question: data.question,
             answer: data.answer,
           });
         } catch (error) {
           console.error("Error adding Question:", error);
+          throw new Error("Failed to add question");
         }
-      }
 
-      setMcqDataList(newMcqDataList);
+        return data;
+      });
+
+      const newMcqDataList = await Promise.all(mcqRequests);
+
+      setMcqDataList([...mcqDataList, ...newMcqDataList]);
+
+      const optionsPromises = newMcqDataList.map(async (data, i) => {
+        try {
+          await axios.post("http://localhost:3001/api/options", {
+            options: [data.answer],
+            ques_id: data.random_id,
+          });
+        } catch (error) {
+          console.error("Error adding Answer in Options Table", error);
+        }
+      });
+
+      await Promise.all(optionsPromises);
     } catch (error) {
-      console.log("Error: ", error);
+      console.error("Error in handleSubmit:", error);
     }
   };
 
-  const selectOption = (index: number, selectedOption: string) => {
-    console.log(selectedOption);
-  };
-  const savedOptions = (additionalOptions: string[] | null) => {
-    console.log(additionalOptions);
-  };
+  // const selectOption = (index: number, selectedOption: string) => {
+  //   console.log(selectedOption);
+  // };
+  // const savedOptions = (additionalOptions: string[] | null) => {
+  //   console.log(additionalOptions);
+  // };
 
-  const deleteQuestion = (index: number) => {
+  const deleteQuestion = async (index: number, ques_id: number) => {
     const updatedMcqDataList = [...mcqDataList];
     updatedMcqDataList.splice(index, 1);
     setMcqDataList(updatedMcqDataList);
+
+    try {
+      await axios.delete(`http://localhost:3001/api/mcq/${ques_id}`);
+      console.log("Deleted Successfully");
+    } catch (error) {
+      console.log("Error in deleteQuestion: ", error);
+    }
   };
 
   return (
@@ -159,17 +184,17 @@ export default function Mcq() {
             <MCQ
               key={index}
               index={index}
-              ques_id={parseInt(randomID)}
+              ques_id={mcqData.random_id}
               paragraph={paragraph}
               question={mcqData.question}
               options={mcqData.distractors}
               answer={mcqData.answer}
-              onDelete={() => deleteQuestion(index)}
+              onDelete={() => deleteQuestion(index, mcqData.random_id)}
             />
           ))}
         </div>
       )}
-      <div className="flex justify-center">Confirm</div>
+      {/* <div className="flex justify-center">Confirm</div> */}
     </div>
   );
 }

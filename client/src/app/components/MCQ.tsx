@@ -40,27 +40,57 @@ function MCQ({
   const addOption = async (newOption: string) => {
     const updatedOptions = [...additionalOptions, newOption];
     setAdditionalOptions(updatedOptions);
-    console.log(ques_id);
+    // console.log(ques_id);
 
     closeModal();
     if (newOption.trim() !== "") {
+      // try {
+      //   const response = await axios.post("http://localhost:3001/api/options", {
+      //     options: [],
+      //     ques_id: ques_id,
+      //   });
+      // } catch (error) {
+      //   console.error("Error adding option:", error);
+      // }
+
       try {
-        const response = await axios.post("http://localhost:3001/api/options", {
-          options: additionalOptions,
+        await axios.put("http://localhost:3001/api/options", {
+          options: [newOption],
           ques_id: ques_id,
         });
       } catch (error) {
-        console.error("Error adding option:", error);
+        console.error("Error updating option:", error);
       }
     } else {
       console.log("No questions available");
     }
   };
+  // const addOption = async (newOption: string) => {
+  //   if (newOption.trim() !== "") {
+  //     try {
+  //       const response = await axios.put(`http://localhost:3001/api/options`, {
+  //         ques_id: ques_id,
+  //         options: [...additionalOptions, newOption], // Combine existing and new
+  //       });
+  //       setAdditionalOptions([...additionalOptions, newOption]); // Update local state
+  //       console.log("Option added successfully:", response.data); // Optional logging
+  //     } catch (error) {
+  //       console.error("Error adding option:", error);
+  //     }
+  //   }
+  //   closeModal();
+  // };
 
-  const deleteOption = (index: number) => {
+  const deleteOption = async () => {
     const updatedOptions = [...additionalOptions];
     updatedOptions.pop();
     setAdditionalOptions(updatedOptions);
+
+    try {
+      await axios.delete(`http://localhost:3001/api/options/${ques_id}`);
+    } catch (error) {
+      console.error("Error Deleting option:", error);
+    }
   };
 
   const handleDelete = (index: number) => {
@@ -175,7 +205,7 @@ function MCQ({
           Add Option
         </button>
         <button
-          onClick={() => deleteOption(index)}
+          onClick={() => deleteOption(selectedOption)}
           className="mt-2 bg-dimgray hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Delete Latest Option

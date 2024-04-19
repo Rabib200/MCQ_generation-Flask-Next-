@@ -758,6 +758,32 @@
         "async": false
       }
     },
+    "(app-client)/./src/app/page.tsx": {
+      "*": {
+        "id": "(sc_client)/./src/app/page.tsx",
+        "name": "*",
+        "chunks": [
+          "app/page:static/chunks/app/page.js"
+        ],
+        "async": false
+      },
+      "": {
+        "id": "(sc_client)/./src/app/page.tsx",
+        "name": "",
+        "chunks": [
+          "app/page:static/chunks/app/page.js"
+        ],
+        "async": false
+      },
+      "default": {
+        "id": "(sc_client)/./src/app/page.tsx",
+        "name": "default",
+        "chunks": [
+          "app/page:static/chunks/app/page.js"
+        ],
+        "async": false
+      }
+    },
     "(app-client)/./src/app/Adaptive/page.tsx": {
       "*": {
         "id": "(sc_client)/./src/app/Adaptive/page.tsx",
@@ -2517,6 +2543,30 @@
       "name": "default",
       "chunks": [
         "app-client-internals:static/chunks/app-client-internals.js"
+      ],
+      "async": false
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\page.tsx": {
+      "id": "(app-client)/./src/app/page.tsx",
+      "name": "*",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\page.tsx#": {
+      "id": "(app-client)/./src/app/page.tsx",
+      "name": "",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
+      ],
+      "async": false
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\page.tsx#default": {
+      "id": "(app-client)/./src/app/page.tsx",
+      "name": "default",
+      "chunks": [
+        "app/page:static/chunks/app/page.js"
       ],
       "async": false
     },

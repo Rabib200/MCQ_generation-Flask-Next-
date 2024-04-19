@@ -473,6 +473,9 @@ input[type="range"]::-ms-fill-lower {
 .flex {
   display: flex;
 }
+.table {
+  display: table;
+}
 .grid {
   display: grid;
 }

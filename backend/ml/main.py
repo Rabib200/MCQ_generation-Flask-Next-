@@ -1,3 +1,4 @@
+import random
 from flask import Flask, request,jsonify
 from flask_cors import CORS
 from transformers import T5ForConditionalGeneration,T5Tokenizer
@@ -53,6 +54,13 @@ def getMCQs(sent):
   ques = get_question(sentence_for_T5,answer)
   return ques,answer,distractors,meaning
 
+def generate_unique_id(generated_ids):
+    random_id = None
+    while random_id is None or random_id in generated_ids:
+        random_id = random.randint(1, 99999)
+    generated_ids.add(random_id)
+    return random_id
+
 
 
 @app.route('/api/generate_mcq',methods=['POST'])
@@ -60,16 +68,19 @@ def generate_mcq():
   data = request.json
 
   sentence = data.get('sentence')
-
+  generated_ids = set()
+  
 
   if sentence  :
     question , answer , distractors , meaning = getMCQs(sentence)
-
+    unique_id = generate_unique_id(generated_ids)
+    
     response_data = {
       "question" : question,
       "answer" : answer,
       "distractors" : distractors,
       "meaning" : meaning,
+      "random_id": unique_id,
     }
     return jsonify(response_data)
   else:

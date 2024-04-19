@@ -42,8 +42,18 @@ class MCQController {
 
   async deleteMCQ(req: Request, res: Response) {
     try {
-      const id = req.params.id;
-      await AppDataSource.getRepository(MCQEntity).delete(id);
+      const { ques_id } = req.params;
+      const parsedQuesId = parseInt(ques_id);
+      const mcqToDelete = await AppDataSource.getRepository(MCQEntity).findOne({
+        where: { ques_id: parsedQuesId },
+      });
+
+      if (!mcqToDelete) {
+        return res.status(404).json({ message: "MCQ not found" });
+      }
+
+      await AppDataSource.getRepository(MCQEntity).remove(mcqToDelete);
+
       res.json({ message: "MCQ deleted successfully" });
     } catch (error) {
       res.status(500).json({ message: error.message });

@@ -5,5 +5,7 @@ const optionsRouter = express.Router();
 
 optionsRouter.get("/", OptionsController.getOptions);
 optionsRouter.post("/", OptionsController.createOptions);
+optionsRouter.put("/", OptionsController.updateOptions);
+optionsRouter.delete("/:ques_id", OptionsController.deleteOptions);
 
 export default optionsRouter;

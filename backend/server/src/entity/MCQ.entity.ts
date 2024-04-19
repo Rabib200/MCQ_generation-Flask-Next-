@@ -1,19 +1,19 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: "mcq_entity" })
+@Entity({ name: "mcq_entity" }) // Specify the table name here
 export class MCQEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: true })
-  email: string | null;
+  @Column()
+  email: string;
 
-  @Column({ nullable: true })
-  question: string | null;
+  @Column()
+  question: string;
 
-  @Column({ nullable: true })
-  answer: string | null;
+  @Column()
+  answer: string;
 
-  @Column({ name: "ques_id", nullable: true })
-  ques_id: number | null;
+  @Column({ name: "ques_id" })
+  ques_id: number;
 }

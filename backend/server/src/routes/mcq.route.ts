@@ -7,6 +7,6 @@ mcqRouter.get("/", mcqController.getMCQs);
 mcqRouter.get("/:id", mcqController.getMCQ);
 mcqRouter.post("/", mcqController.createMCQ);
 // mcqRouter.put("/:id", mcqController.updateMCQ);
-mcqRouter.delete("/:id", mcqController.deleteMCQ);
+mcqRouter.delete("/:ques_id", mcqController.deleteMCQ);
 
 export default mcqRouter;

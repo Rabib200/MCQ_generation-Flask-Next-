@@ -1,11 +1,18 @@
 import { Request, Response } from "express";
+import { Equal } from "typeorm";
 import { AppDataSource } from "../database";
 import { OptionsEntity } from "../entity/options.entity";
 
 class OptionsController {
   async getOptions(req: Request, res: Response) {
+    const { ques_id } = req.params;
+    const parsedQuesId = parseInt(ques_id);
     try {
-      const options = await AppDataSource.getRepository(OptionsEntity).find();
+      const options = await AppDataSource.getRepository(OptionsEntity).find({
+        where: {
+          ques_id: Equal(parsedQuesId),
+        },
+      });
       res.json(options);
     } catch (error) {
       res.status(500).json({ message: error.message });
@@ -35,6 +42,7 @@ class OptionsController {
         return res.status(404).json({ message: "Options not found" });
       }
 
+      option.options.sort(() => Math.random() - 0.5);
       option.options.push(...options);
 
       res.status(200).json(option);

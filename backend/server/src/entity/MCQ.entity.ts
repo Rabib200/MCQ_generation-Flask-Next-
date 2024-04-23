@@ -1,6 +1,6 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
-@Entity({ name: "mcq_entity" }) // Specify the table name here
+@Entity({ name: "mcq_entity" })
 export class MCQEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,4 +16,7 @@ export class MCQEntity {
 
   @Column({ name: "ques_id" })
   ques_id: number;
+
+  @Column({ name: "context" })
+  context: string;
 }

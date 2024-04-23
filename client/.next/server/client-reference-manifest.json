@@ -784,6 +784,32 @@
         "async": false
       }
     },
+    "(app-client)/./src/app/components/student/Mcq.tsx": {
+      "*": {
+        "id": "(sc_client)/./src/app/components/student/Mcq.tsx",
+        "name": "*",
+        "chunks": [
+          "app/student/page:static/chunks/app/student/page.js"
+        ],
+        "async": false
+      },
+      "": {
+        "id": "(sc_client)/./src/app/components/student/Mcq.tsx",
+        "name": "",
+        "chunks": [
+          "app/student/page:static/chunks/app/student/page.js"
+        ],
+        "async": false
+      },
+      "default": {
+        "id": "(sc_client)/./src/app/components/student/Mcq.tsx",
+        "name": "default",
+        "chunks": [
+          "app/student/page:static/chunks/app/student/page.js"
+        ],
+        "async": false
+      }
+    },
     "(app-client)/./src/app/Adaptive/page.tsx": {
       "*": {
         "id": "(sc_client)/./src/app/Adaptive/page.tsx",
@@ -2583,6 +2609,30 @@
       "chunks": [
         "static/css/app/layout.css"
       ]
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\components\\student\\Mcq.tsx": {
+      "id": "(app-client)/./src/app/components/student/Mcq.tsx",
+      "name": "*",
+      "chunks": [
+        "app/student/page:static/chunks/app/student/page.js"
+      ],
+      "async": false
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\components\\student\\Mcq.tsx#": {
+      "id": "(app-client)/./src/app/components/student/Mcq.tsx",
+      "name": "",
+      "chunks": [
+        "app/student/page:static/chunks/app/student/page.js"
+      ],
+      "async": false
+    },
+    "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\components\\student\\Mcq.tsx#default": {
+      "id": "(app-client)/./src/app/components/student/Mcq.tsx",
+      "name": "default",
+      "chunks": [
+        "app/student/page:static/chunks/app/student/page.js"
+      ],
+      "async": false
     },
     "D:\\FYDP-2\\MCQ_generation-Flask-Next-\\client\\src\\app\\Adaptive\\page.tsx": {
       "id": "(app-client)/./src/app/Adaptive/page.tsx",

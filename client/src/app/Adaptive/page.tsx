@@ -2,6 +2,7 @@
 import axios from "axios";
 import { useState } from "react";
 import MCQ from "../components/MCQ";
+// import Sidenav from "../components/SideNav/Sidenav";
 
 export default function Mcq() {
   const [paragraph, setParagraph] = useState("");
@@ -9,17 +10,6 @@ export default function Mcq() {
   const [enableHighlight, setEnableHighlight] = useState(false);
   const [randomIDs, setRandomIDs] = useState<number[]>([]);
   const [mcqDataList, setMcqDataList] = useState([]);
-
-  // let generatedIds = new Set();
-  // function generateUniqueId() {
-  //   let randomId;
-  //   do {
-  //     randomId = Math.floor(Math.random() * 9999) + 1;
-  //   } while (generatedIds.has(randomId));
-
-  //   generatedIds.add(randomId);
-  //   return randomId;
-  // }
 
   const handleWordSelection = (word: string) => {
     if (enableHighlight && !selectedWords.includes(word)) {
@@ -50,12 +40,6 @@ export default function Mcq() {
         .split(".")
         .filter((sentence) => sentence.includes("**"));
 
-      // sentenceWithMarks.forEach((element) => {
-      //   const ids = randomIDs;
-      //   ids.push(generateUniqueId());
-      //   setRandomIDs(ids);
-      // });
-
       const mcqRequests = sentenceWithMarks.map(async (sentence, i) => {
         const serverUrl = "http://127.0.0.1:5000";
         const mcqResponse = await axios.post(`${serverUrl}/api/generate_mcq`, {
@@ -76,6 +60,7 @@ export default function Mcq() {
             ques_id: data.random_id,
             question: data.question,
             answer: data.answer,
+            context: paragraph,
           });
         } catch (error) {
           console.error("Error adding Question:", error);
@@ -128,6 +113,9 @@ export default function Mcq() {
 
   return (
     <div className="flex-col  gap-10 bg-gray">
+      {/* <div className="hidden md:block">
+        <Sidenav />
+      </div> */}
       <form onSubmit={handleSubmit}>
         <label className="gap-10">
           <textarea

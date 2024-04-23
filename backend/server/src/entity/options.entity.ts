@@ -5,7 +5,7 @@ export class OptionsEntity {
   @PrimaryGeneratedColumn({ type: "bigint" })
   id: number;
 
-  @Column({ type: "json", nullable: true })
+  @Column({ type: "json" })
   options: string[];
 
   @Column({ type: "bigint", nullable: true })

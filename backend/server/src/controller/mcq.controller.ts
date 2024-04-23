@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import { Equal } from "typeorm";
 import { AppDataSource } from "../database";
 import { MCQEntity } from "../entity/MCQ.entity";
+import { OptionsEntity } from "../entity/options.entity";
 
 class MCQController {
   async getMCQs(req: Request, res: Response) {
@@ -14,10 +16,10 @@ class MCQController {
 
   async getMCQ(req: Request, res: Response) {
     try {
-      const id = req.params.id;
-      const mcq = await AppDataSource.getRepository(MCQEntity).findOne({
+      const { email } = req.params;
+      const mcq = await AppDataSource.getRepository(MCQEntity).find({
         where: {
-          ques_id: +id,
+          email: email,
         },
       });
 
@@ -55,6 +57,37 @@ class MCQController {
       await AppDataSource.getRepository(MCQEntity).remove(mcqToDelete);
 
       res.json({ message: "MCQ deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  async getMCQWithOptions(req: Request, res: Response) {
+    try {
+      const { email } = req.params;
+      const mcq = await AppDataSource.getRepository(MCQEntity).find({
+        where: {
+          email: email,
+        },
+      });
+
+      const mcqWithOptions = await Promise.all(
+        mcq.map(async (mcqItem) => {
+          const options = await AppDataSource.getRepository(OptionsEntity).find(
+            {
+              where: {
+                ques_id: Equal(mcqItem.ques_id),
+              },
+            }
+          );
+          return {
+            ...mcqItem,
+            options: options,
+          };
+        })
+      );
+
+      res.json(mcqWithOptions);
     } catch (error) {
       res.status(500).json({ message: error.message });
     }

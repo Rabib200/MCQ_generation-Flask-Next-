@@ -44,15 +44,6 @@ function MCQ({
 
     closeModal();
     if (newOption.trim() !== "") {
-      // try {
-      //   const response = await axios.post("http://localhost:3001/api/options", {
-      //     options: [],
-      //     ques_id: ques_id,
-      //   });
-      // } catch (error) {
-      //   console.error("Error adding option:", error);
-      // }
-
       try {
         await axios.put("http://localhost:3001/api/options", {
           options: [newOption],
@@ -65,21 +56,6 @@ function MCQ({
       console.log("No questions available");
     }
   };
-  // const addOption = async (newOption: string) => {
-  //   if (newOption.trim() !== "") {
-  //     try {
-  //       const response = await axios.put(`http://localhost:3001/api/options`, {
-  //         ques_id: ques_id,
-  //         options: [...additionalOptions, newOption], // Combine existing and new
-  //       });
-  //       setAdditionalOptions([...additionalOptions, newOption]); // Update local state
-  //       console.log("Option added successfully:", response.data); // Optional logging
-  //     } catch (error) {
-  //       console.error("Error adding option:", error);
-  //     }
-  //   }
-  //   closeModal();
-  // };
 
   const deleteOption = async () => {
     const updatedOptions = [...additionalOptions];
